@@ -1,0 +1,30 @@
+{
+  "name": "passhub",
+  "version": "1.0.0",
+  "description": "A tool for store your password.",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0",
+    "vue": "^2.5.21",
+    "vue-router": "^3.0.2",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "electron": "4.0.1",
+    "electron-webpack": "^2.6.1",
+    "source-map-support": "^0.5.9",
+    "vue-loader": "^15.5.0",
+    "vue-template-compiler": "^2.5.21",
+    "webpack": "^4.28.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ./src/main",
+    "dev": "electron-webpack dev",
+    "build": "electron-webpack && electron-builder"
+  },
+  "author": "Fennie <beduo@qq.com>",
+  "license": "MIT"
+}
