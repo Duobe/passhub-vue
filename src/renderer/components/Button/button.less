@@ -1,0 +1,67 @@
+@import url('../../styles/theme.less');
+
+.button {
+  cursor: pointer;
+  min-width: @btn-sm-width;
+  min-height: @btn-height;
+  outline: none;
+  padding: 0 8px;
+  background: none;
+  border-radius: @btn-radius;
+  border: @btn-border;
+  color: @textColor;
+  user-select: none;
+  overflow: hidden;
+  white-space: nowrap;
+
+  text-decoration: none;
+  display: inline-block;
+  line-height: 1.85;
+  vertical-align: text-top;
+
+  transition: background-color .3s;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:hover:not([disabled]) {
+    color: @black;
+  }
+
+  &:active:not([disabled]) {
+    background-color: @grey3;
+  }
+
+  &.solid {
+    border: none;
+    background-color: @grey3;
+
+    &:hover:not([disabled]) {
+      background-color: @btn-hover-bg;
+    }
+
+    &:active:not([disabled]) {
+      background-color: @btn-active-bg;
+    }
+  }
+
+}
+
+.button-sm {
+  .button;
+
+  .size(@btn-height, @btn-sm-width);
+}
+
+.button-md {
+  .button;
+
+  .size(@btn-height, @btn-md-width);
+}
+
+.button-lg {
+  .button;
+
+  .size(@btn-height, @btn-lg-width);
+}
