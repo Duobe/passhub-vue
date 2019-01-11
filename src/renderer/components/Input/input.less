@@ -1,0 +1,54 @@
+@import url('../../styles/theme.less');
+
+.input {
+  box-sizing: border-box;
+  outline: none;
+  width: 256px;
+  height: 32px;
+  padding: 0 8px;
+  border: @border;
+  border-radius: @borderRadius;
+  line-height: @fontSize;
+  font-size: @fontSize;
+  color: @textColor;
+  .placeholder({color: @colorPlaceholder});
+
+  transition: border-color .3s, color .3s;
+
+  &:focus {
+    border-color: @borderColor;
+    color: @black;
+  }
+
+  &.solid {
+    border-color: @inputColor;
+    background: @inputColor;
+  }
+
+  &.large {
+    height: 34px;
+  }
+
+  &-container {
+    width: 320px;
+    display: flex;
+    border: @border;
+    border-radius: @borderRadius;
+
+    .input {
+      border: none;
+      flex: 1;
+    }
+
+    .button {
+      border: none;
+    }
+
+    svg {
+      position: relative;
+      right: 4px;
+      top: 4px;
+    }
+  }
+}
+
