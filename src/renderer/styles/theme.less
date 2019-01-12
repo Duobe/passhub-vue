@@ -1,0 +1,62 @@
+@prefix: 'my';
+
+@grey1: #999;
+@grey2: #e0e0e0;
+@grey3: #f6f6f6;
+@black: #525a5b;
+@white: #fff;
+
+@fontSize: 14px;
+@width: 320px;
+@height: 34px;
+@icon: 20px;
+@logo: 80px;
+@avatar: 32px;
+@search: 180px;
+@letterSpacing: 17px;
+
+@colorPlaceholder: @grey2;
+@textColor: @grey1;
+@lineHeight: 1.25;
+
+@border: 1px solid @grey2;
+@borderColor: @grey1;
+@borderRadius: 3px;
+
+@inputColor: @grey3;
+
+@background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0) 100%);
+
+.size(@height, @width) {
+  width: @width;
+  height: @height;
+}
+
+.placeholder(@property){
+  &::-webkit-input-placeholder { /* WebKit browsers */
+    @property();
+  }
+  &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    @property();
+  }
+  &::-moz-placeholder { /* Mozilla Firefox 19+ */
+    @property();
+  }
+  &:-ms-input-placeholder { /* Internet Explorer 10+ */
+    @property();
+  }
+}
+
+// button
+@btn-sm-width: 32px;
+@btn-md-width: 70px;
+@btn-lg-width: 160px;
+
+@btn-height: 32px;
+
+@btn-radius: 3px;
+@btn-border: 1px solid @grey2;
+
+@btn-bg: @grey3;
+@btn-hover-bg: @grey3;
+@btn-active-bg: @grey2;
