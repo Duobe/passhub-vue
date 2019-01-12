@@ -1,23 +1,23 @@
 <template>
   <div class="input-container">
-    <my-button class="button-sm button-left" @click="$emit('click', $event)" v-if="left">
+    <ph-button class="button-sm button-left" v-if="left">
       <slot name="left-icon"></slot>
-    </my-button>
-    <slot></slot>
-    <my-button class="button-sm button-right" v-if="right" @click="$emit('click', $event)">
-      <slot name="right-icon"></slot>
-    </my-button>
+    </ph-button>
 
-    <my-button class="button-sm button-right" v-if="clear" @click="clearValue">
-      <x-circle-icon class="custom-class"></x-circle-icon>
-    </my-button>
+    <slot></slot>
+
+    <ph-button class="button-sm button-right" v-if="right">
+      <slot name="right-icon"></slot>
+    </ph-button>
+
+    <ph-button class="button-sm button-right" v-if="clear && !right" @click="clearValue">
+      <ph-icon name="x-circle"></ph-icon>
+    </ph-button>
   </div>
 </template>
 <script>
-import { XCircleIcon, EyeIcon, EyeOffIcon } from "vue-feather-icons"
-
 export default {
-  name: "my-input-container",
+  name: "ph-input-container",
   props: {
     left: Boolean,
     right: Boolean,
@@ -28,11 +28,6 @@ export default {
       value: '',
       inputInstance: null
     }
-  },
-  components: {
-    XCircleIcon,
-    EyeIcon,
-    EyeOffIcon
   },
   computed: {
     hasValue() {

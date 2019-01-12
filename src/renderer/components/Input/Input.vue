@@ -33,7 +33,7 @@ let getClosestVueParent = ($parent, cssClass) => {
 }
 
 export default {
-  name: "my-input",
+  name: "ph-input",
   props: {
     type: {
       type: String,
@@ -52,7 +52,7 @@ export default {
       if (!this.parentContainer) {
         this.$destroy()
 
-        throw new Error("You should wrap the my-input in a my-input-container")
+        throw new Error("You should wrap the ph-input in a ph-input-container")
       }
 
       this.parentContainer.inputInstance = this
