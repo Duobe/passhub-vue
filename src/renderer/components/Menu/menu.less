@@ -1,0 +1,71 @@
+@import url('../../styles//theme.less');
+
+.menu {
+  min-width: 32px;
+  width: 200px;
+  position: absolute;
+  bottom: 0;
+  top: 56px;
+  left: 0;
+  overflow: auto;
+  background-color: @grey3;
+  border-right: @border;
+
+  & > ul {
+    padding: 0;
+    margin: 0;
+    display: block;
+  }
+  &-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    list-style: none;
+    height: 42px;
+    line-height: 0;
+    padding-left: 4px;
+    color: @textColor;
+    user-select: none;
+
+    transition: background-color .3s;
+
+    span.icon {
+      margin-right: 4px;
+    }
+    &:hover:not([disabled]) {
+      background-color: @grey2;
+    }
+
+    a {
+      user-select: none;
+      display: block;
+      text-decoration: none;
+      outline: none;
+      color: @textColor;
+      font-size: @fontSize;
+    }
+
+    &.active {
+      position: relative;
+      color: @black;
+
+      svg {
+        stroke: @black;
+      }
+
+      &>a {
+        color: @black;
+      }
+
+      &::before {
+        position: absolute;
+        left: 0;
+        display: block;
+        content: '';
+        height: 42px;
+        width: 4px;
+        background-color: @grey1;
+      }
+    }
+  }
+}
