@@ -1,26 +1,18 @@
 <template>
   <div class="input-container">
-    <ph-button class="button-sm button-left" v-if="left">
-      <slot name="left-icon"></slot>
-    </ph-button>
+    <slot name="left" class="button-sm button-left"></slot>
 
     <slot></slot>
 
-    <ph-button class="button-sm button-right" v-if="right">
-      <slot name="right-icon"></slot>
-    </ph-button>
+    <slot name="right" class="button-sm button-right"></slot>
 
-    <ph-button class="button-sm button-right" v-if="clear && !right" @click="clearValue">
-      <ph-icon name="x-circle"></ph-icon>
-    </ph-button>
+    <ph-icon name="x-circle" class="button-sm button-right" v-if="clear && !right" @click="clearValue"></ph-icon>
   </div>
 </template>
 <script>
 export default {
   name: "ph-input-container",
   props: {
-    left: Boolean,
-    right: Boolean,
     clear: Boolean
   },
   data() {
