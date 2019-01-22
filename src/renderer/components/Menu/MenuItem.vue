@@ -26,7 +26,7 @@ export default {
   computed: {
     classes() {
       return {
-        'active': this.activeIndex === this.index
+        'active': this.index === this.activeIndex
       }
     }
   },
