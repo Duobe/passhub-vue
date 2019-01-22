@@ -1,5 +1,5 @@
 <template>
-  <span class="icon">
+  <span class="icon" @click="$emit('click', $event)">
     <feather-icon :name="name" :size="size" :strokeWidth="strokeWidth"></feather-icon>
   </span>
 </template>
@@ -12,7 +12,7 @@ export default {
     },
     size: {
       type: String,
-      default: '18'
+      default: '16'
     },
     strokeWidth: {
       type: String,
@@ -25,7 +25,24 @@ export default {
 <style lang="less">
 @import url("../../styles/theme.less");
 
-svg {
-  stroke: @grey1;
+.icon {
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  svg {
+    stroke: @grey1;
+  }
+  &:hover {
+    svg {
+      stroke: @black;
+    }
+  }
+  &:active {
+    svg {
+      stroke: @grey1;
+    }
+  }
 }
 </style>
