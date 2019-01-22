@@ -1,29 +1,24 @@
 <template>
   <div class="login">
-    <Logo></Logo>
-    <ph-input-container right>
-      <ph-input
-        v-model="passPhrase"
-        type="password"
-        autocomplete="new-password"
-        @keyup.native="keyUp($event)"
-      >
-      </ph-input>
-      <template slot="right-icon">
-        <ph-icon name="log-in" @click="login"></ph-icon>
-      </template>
-      <div v-if="isLoading">loading...</div>
-    </ph-input-container>
+    <div>
+      <ph-logo></ph-logo>
+      <ph-input-container>
+        <ph-input
+          v-model="passPhrase"
+          type="password"
+          autocomplete="new-password"
+          @keyup.native="keyUp($event)"
+        >
+        </ph-input>
+        <ph-icon name="arrow-right" size="20" @click="login"></ph-icon>
+      </ph-input-container>
+    </div>
+    <div v-if="isLoading">loading...</div>
   </div>
 </template>
 <script>
-import Logo from "../components/Logo"
-
 export default {
   name: "login",
-  components: {
-    Logo
-  },
   data() {
     return {
       passPhrase: "",
@@ -36,15 +31,12 @@ export default {
 
       if (this.passPhrase.length < 0) return
 
-      if (this.debug) {
-        this.$router.push({ name: 'home' })
-        return
-      }
+      this.isLoading = true
 
-      this.$store.dispatch('login', { passPhrase: this.passPhrase })
-        .then(() => {
-          this.$router.push({ name: 'home' })
-        })
+      this.$store.dispatch('login', { passPhrase: this.passPhrase }).then(() => {
+        this.isLoading = false
+        this.$router.push({ name: 'home' })
+      })
     },
     keyUp: function (event) {
       if (event.key === 'Enter') {
@@ -55,8 +47,20 @@ export default {
 }
 </script>
 <style lang="less">
+@import url('../styles/theme.less');
 .login {
-  margin: 128px auto auto;
-  width: 320px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .logo {
+    margin-bottom: 24px;
+  }
+  .icon {
+    cursor: pointer;
+  }
+  input {
+    height: 36px;
+  }
 }
 </style>
