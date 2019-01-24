@@ -7,50 +7,175 @@
         </div>
         <div class="title">Passhub</div>
       </div>
-      <ph-search></ph-search>
+      <ph-search :groupId="groupId"></ph-search>
     </header>
     <ph-menu>
+      <div class="options" slot="options" v-if="editable" :style="[optionStyle]">
+        <div @click="editName">
+           <ph-icon name="edit"></ph-icon>Rename
+        </div>
+        <div @click="delGroup">
+           <ph-icon name="trash-2"></ph-icon>Delete
+        </div>
+      </div>
       <ph-menu-item
+        @optionClicked="editableGroup"
+        @click="switchGroup"
+        v-for="(item, index) in groups"
         :index="index"
         :activeIndex="activeIndex"
-        @click="handleMenuItem"
-        v-for="(item, index) in data"
-        v-bind:key="index"
+        :key="index"
+        :id="item.id"
       >
-        <ph-icon :name="item.icon"></ph-icon>
-        <router-link :to="item.path">{{item.name}}</router-link>
+        <ph-input-container v-if="canRename && item.id === editGroupItem.id">
+          <ph-icon :name="icon"></ph-icon>
+          <ph-input
+            @keyup.native="editGroup($event)"
+            :value="item.title"
+            class="solid"
+          ></ph-input>
+        </ph-input-container>
+        <template v-else>
+          <ph-icon :name="item.icon"></ph-icon>{{item.title}}
+        </template>
       </ph-menu-item>
-      <ph-menu-item>
+
+      <ph-menu-item class="create-input" v-if="visible" disabled>
+        <ph-input-container>
+          <ph-icon :name="icon"></ph-icon>
+          <ph-input
+            @keyup.native="createGroup($event)"
+            v-model="title"
+            class="solid"
+          ></ph-input>
+        </ph-input-container>
+      </ph-menu-item>
+
+      <ph-menu-item @click="handleVisible" v-if="!visible" class="add">
         <ph-icon name="plus"></ph-icon>Add
       </ph-menu-item>
     </ph-menu>
-    <div class="content">
-      <slot></slot>
-    </div>
+    <slot></slot>
   </div>
 </template>
 <script>
 import phSearch from './Search.vue'
+import PersistonStore from '../lib/persistonStore'
 
 export default {
   name: "wrapper",
   components: { phSearch },
   data() {
     return {
-      data: [
-        { path: `project/1`, name: 'All', icon: 'clock'},
-        { path: `project/2`, name: 'Accounts', icon: 'plus'},
-        { path: `project/3`, name: 'Games', icon: 'clock'}
-      ],
-      activeIndex: 1
+      activeIndex: 0,
+      visible: false,
+      editable: false,
+      canRename: false,
+      icon: 'inbox',
+      title: '',
+
+      groups: [],
+      optionStyle: {},
+      editGroupItem: {}
+    }
+  },
+  computed: {
+    groupId: function() {
+      const list = this.groups[this.activeIndex]
+      const id = list && list.id
+      return id || this.$route.params.groupId
     }
   },
   methods: {
-    handleMenuItem($event, index) {
+    editName() {
+      this.canRename = true
+    },
+    delGroup() {
+      const groupId = this.editGroupItem.id
+
+      this.$store.dispatch('delGroup', groupId).then(result => {
+        if (result) {
+          this.fetchGroups()
+        }
+        this.editable = false
+      })
+    },
+    editableGroup(event, index) {
+      if (!this.editable) this.editable = true
+      if (this.canRename) this.canRename = false
+
+      this.optionStyle = {
+        top: (29 + 42 * index) + 'px'
+      }
+      this.editGroupItem = this.groups[index]
+    },
+    switchGroup(event, index) {
+
+      if (event.type === 'contextmenu') return
+
+      if (this.editable) this.editable = false
+
+      if (this.activeIndex === index) return
+
       this.activeIndex = index
+
+      if (this.groupId) {
+        this.$router.push({ name: 'entry', params: { groupId: this.groupId } })
+      }
+    },
+    handleVisible() {
+      this.visible = true
+    },
+    createGroup(event) {
+      if (event.key === 'Enter') {
+        this.$store.dispatch('createGroup', { title: this.title, icon: this.icon }).then(result => {
+          this.visible = false
+          this.title = ''
+
+          return result.id
+        }).then(groupId => {
+          this.$store.dispatch('getGroups').then(result => {
+            this.groups = result
+            this.activeIndex = result.findIndex(value => value.id === groupId)
+
+            if (!!groupId) {
+              this.$router.push({ name: 'entry', params: { groupId } })
+            }
+          })
+        })
+      }
+    },
+    handleBlankArea(event) {
+      if (event.target.closest(".create-input") || event.target.closest(".add")) return
+      if (this.visible) this.visible = false
+      if (this.editable) this.editable = false
+    },
+    closeOption() {
+      this.editable = false
+      this.editGroupItem = []
+    },
+    fetchGroups() {
+      this.$store.dispatch('getGroups').then((result) => {
+        this.groups = result
+        if (!!this.groupId) {
+          this.$router.push({ name: 'entry', params: { groupId: this.groupId } })
+        }
+      })
     }
+  },
+  created() {
+    PersistonStore.initialize().then(() => {
+      this.fetchGroups()
+    })
+
+    document.addEventListener("click", this.handleBlankArea)
+    document.addEventListener("contextmenu", this.closeOption)
+  },
+  beforeDestroy() {
+    document.removeEventListener("click", this.handleBlankArea)
+    document.removeEventListener("contextmenu", this.closeOption)
   }
-};
+}
 </script>
 <style lang="less">
 @import url('../styles/theme.less');
@@ -58,7 +183,10 @@ export default {
 .wrapper {
   height: 100%;
   header {
-    display: flex;
+    width: 450px;
+    & > div {
+      display: inline-block;
+    }
 
     & > .logo {
       height: 56px;
@@ -87,9 +215,19 @@ export default {
 
     .search {
       padding: 12px;
+      height: 56px;
+      float: right;
+    }
+  }
+  .create-input {
+    padding: 8px;
+    transition: all .3s;
+    input {
+      padding: 0;
     }
   }
   .content {
+    overflow: auto;
     width: 250px;
     border-right: @border;
     border-top: @border;

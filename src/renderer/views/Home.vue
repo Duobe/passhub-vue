@@ -1,27 +1,21 @@
 <template>
-  <div id="home">
-    <h1>{{ title }}</h1>
-    <ul>
-      <li>
-        <router-link to="/login">Go to Login Page</router-link>
-      </li>
-      <li>
-        <router-link to="/others">Go to others Page</router-link>
-      </li>
-    </ul>
-    <header>hello</header>
-    <input type="text">
-    <router-view></router-view>
+  <div class="home">
+    <Wrapper>
+      <div class="content">
+        <router-view class="view" :key="$route.fullPath"></router-view>
+        <router-view class="view one" name="entry" :key="$route.fullPath"></router-view>
+      </div>
+      <router-view class="view two" name="field" :key="$route.fullPath"></router-view>
+    </Wrapper>
   </div>
 </template>
 <script>
-export default {
-  name: "home",
-  data() {
-    return {
-      title: "home page"
-    };
-  }
-};
-</script>
+import Wrapper from "../components/Wrapper"
 
+export default {
+  name: "Home",
+  components: {
+    Wrapper
+  }
+}
+</script>

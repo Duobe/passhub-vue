@@ -59,15 +59,18 @@ class PersistonStore {
     return groups
   }
 
-  async updateGroup (groupId, payload) {
-    return this.groups.updateOne({ id: groupId }, {
-      title: payload.title,
-      icon: payload.icon
+  async updateGroup (payload) {
+    return this.groups.updateOne({ id: payload.id }, {
+      title: payload.title
     })
   }
 
   async delGroupById (groupId) {
-    return this.groups.removeOne({ id: groupId })
+    return this.groups.removeOne({ id: groupId }).then(() => {
+      this.entries.remove({ groupId })
+    }).then(() => {
+      this.fields.remove({ groupId })
+    })
   }
 
   async createEntry (payload) {
@@ -93,7 +96,7 @@ class PersistonStore {
     return entry
   }
 
-  async findAllEntriesByGroupId (groupId) {
+  async findAllEntriesByGid (groupId) {
     const entries = await this.entries.find({ groupId })
     return entries
   }

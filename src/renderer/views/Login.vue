@@ -4,7 +4,7 @@
       <ph-logo></ph-logo>
       <ph-input-container>
         <ph-input
-          v-model="passPhrase"
+          v-model="password"
           type="password"
           autocomplete="new-password"
           @keyup.native="keyUp($event)"
@@ -17,25 +17,28 @@
   </div>
 </template>
 <script>
+import PersistonStore from './../lib/persistonStore'
+
 export default {
   name: "login",
   data() {
     return {
-      passPhrase: "",
+      password: "",
       isLoading: false
     }
   },
   methods: {
     login: function () {
-      this.passPhrase = this.passPhrase.toLowerCase().trim()
+      this.password = this.password.toLowerCase().trim()
 
-      if (this.passPhrase.length < 0) return
+      if (this.password.length < 0) return
 
       this.isLoading = true
 
-      this.$store.dispatch('login', { passPhrase: this.passPhrase }).then(() => {
+      PersistonStore.initialize()
+      this.$store.dispatch('login', { password: this.password }).then(() => {
         this.isLoading = false
-        this.$router.push({ name: 'home' })
+        this.$router.push({ path: '/' })
       })
     },
     keyUp: function (event) {

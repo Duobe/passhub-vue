@@ -2,6 +2,7 @@
   <li
     class="menu-item"
     @click="handleClick"
+    @contextmenu.prevent.stop="handlecontextmenu"
     :index="index"
     :class="classes"
     :href="href"
@@ -36,6 +37,11 @@ export default {
         this.$emit('click', $event, this.index)
       }
     },
+    handlecontextmenu($event) {
+      if (!this.disabled) {
+        this.$emit('optionClicked', $event, this.index)
+      }
+    }
   },
   mounted() {
   }

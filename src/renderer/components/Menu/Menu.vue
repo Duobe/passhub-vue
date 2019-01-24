@@ -3,6 +3,7 @@
     <ul>
       <slot></slot>
     </ul>
+    <slot name="options"></slot>
   </nav>
 </template>
 <script>

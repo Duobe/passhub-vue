@@ -3,7 +3,7 @@
     <ph-icon :name="icon" size="28"></ph-icon>
     <ph-form>
       <ph-form-item
-        v-for="(item, index) in data"
+        v-for="(item, index) in records"
         v-bind:key="index"
         :name="item.name"
         :content="item.content"
@@ -13,7 +13,12 @@
       >
       </ph-form-item>
     </ph-form>
-    <ph-icon name="plus" class="add" size="22"></ph-icon>
+    <ph-icon name="plus" class="add" size="22" @click="toggleDialog"></ph-icon>
+    <ph-dialog
+      :showDialog="showDialog"
+      :closeFn="toggleDialog"
+      :confirmFn="confirm"
+      ></ph-dialog>
   </div>
 </template>
 <script>
@@ -24,9 +29,32 @@ export default {
       type: String,
       default: 'file-text'
     },
-    data: Array
+    data: Array,
+    editRecordFn: Function
   },
-  mounted() {
+  data() {
+    return {
+      showDialog: false,
+      records: this.data
+    }
+  },
+  watch: {
+    data(newVal, oldVal) {
+      this.records = newVal
+    }
+  },
+  methods: {
+    toggleDialog() {
+      this.showDialog = !this.showDialog
+    },
+    confirm($event, data) {
+      if (data.name && data.content) {
+        this.$store.dispatch('insertItem', data).then(() => {
+          this.toggleDialog()
+          this.editRecordFn(data)
+        })
+      }
+    },
   }
 }
 </script>

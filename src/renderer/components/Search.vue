@@ -1,36 +1,51 @@
 <template>
   <div class="search">
     <ph-input-container>
-      <ph-icon name="search" @click="search"></ph-icon>
-      <ph-input class="solid" v-model="keyword" @keyup.native="keyUp($event)" autocomplete="new-keyword"></ph-input>
+      <ph-icon name="search"></ph-icon>
+      <ph-input class="solid" v-model="keyword" autocomplete="new-keyword"></ph-input>
     </ph-input-container>
-    <ph-icon name="plus"></ph-icon>
+    <ph-icon name="plus" @click="toggleDialog"></ph-icon>
+    <ph-dialog
+      :showDialog="showDialog"
+      :closeFn="toggleDialog"
+      :confirmFn="confirm"
+      placeholder1="please enter title"
+      placeholder2="please enter description"
+      ></ph-dialog>
   </div>
 </template>
 <script>
 export default {
   name: "ph-search",
+  props: {
+    groupId: String
+  },
   data() {
     return {
-      keyword: ''
+      keyword: '',
+      showDialog: false
+    }
+  },
+  watch: {
+    keyword(newVal, oldVal) {
+      this.$store.commit('filter', newVal)
     }
   },
   methods: {
-    search () {
-      this.keyword = this.keyword.toLowerCase().trim()
-
-      if (this.keyword.length < 0) return
-
-      this.isLoading = true
-
-      this.$store.dispatch('project/search', { keyword: this.keyword }).then(() => {
-        this.isLoading = false
-        // this.$router.push({ name: 'project' })
-      })
+    toggleDialog() {
+      this.showDialog = !this.showDialog
     },
-    keyUp: function (event) {
-      if (event.key === 'Enter') {
-        this.search()
+    confirm($event, data) {
+      if (data.name && data.content && this.groupId) {
+        this.$store.dispatch('createEntry', {
+          groupId: this.groupId,
+          icon: data.icon,
+          title: data.name,
+          description: data.content
+        }).then(() => {
+          this.toggleDialog()
+          this.$store.commit('afterInsertEntry')
+        })
       }
     }
   }
@@ -42,7 +57,7 @@ export default {
 .search {
   width: 250px;
   border-right: @border;
-  .input {
+  & > .input {
     padding: 0 8px 0 0;
     &-container {
       border: none;
@@ -54,9 +69,9 @@ export default {
   }
 
   & > .icon {
-    background-color: @inputColor;
     width: 32px;
     float: right;
+    background-color: @inputColor;
     border-radius: @borderRadius;
     svg {
       stroke: @black;

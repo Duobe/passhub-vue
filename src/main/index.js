@@ -4,6 +4,8 @@ const url = require('url')
 
 let win
 
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = true
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 const loadUrl = isDevelopment
@@ -14,17 +16,16 @@ const loadUrl = isDevelopment
     slashes: true
   })
 
-function createWindow() {
-
+function createWindow () {
   win = new BrowserWindow({
     title: 'Passhub',
     icon: '',
     width: 800,
     height: 480,
     minWidth: 600,
-    minHeight: 400,
-    // frame: false
-    autoHideMenuBar: true,
+    minHeight: 400
+    // frame: false,
+    // autoHideMenuBar: true
   })
 
   win.loadURL(loadUrl)

@@ -55,6 +55,8 @@ export default {
     confirm($event) {
       this.$emit('click', $event)
       this.confirmFn($event, { name: this.name, content: this.content, icon: this.icon })
+      this.name = ''
+      this.content = ''
     }
   }
 }
