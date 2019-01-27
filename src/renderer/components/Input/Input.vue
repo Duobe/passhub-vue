@@ -11,6 +11,7 @@
     :min="min"
     :max="max"
     :readonly="readonly"
+    :focus="focus"
     @focus="onFocus"
     @blur="onBlur"
     @input="onInput"

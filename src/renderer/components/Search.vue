@@ -4,7 +4,7 @@
       <ph-icon name="search"></ph-icon>
       <ph-input class="solid" v-model="keyword" autocomplete="new-keyword"></ph-input>
     </ph-input-container>
-    <ph-icon name="plus" @click="toggleDialog"></ph-icon>
+    <ph-icon name="plus" class="plus" @click="toggleDialog"></ph-icon>
     <ph-dialog
       :showDialog="showDialog"
       :closeFn="toggleDialog"
@@ -16,7 +16,7 @@
 </template>
 <script>
 export default {
-  name: "ph-search",
+  name: 'ph-search',
   props: {
     groupId: String
   },
@@ -55,9 +55,11 @@ export default {
 @import url('../styles/theme.less');
 
 .search {
-  width: 250px;
-  border-right: @border;
-  & > .input {
+  display: flex;
+  .plus {
+    margin-left: 10px;
+  }
+  .input {
     padding: 0 8px 0 0;
     &-container {
       border: none;

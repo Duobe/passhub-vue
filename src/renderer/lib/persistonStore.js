@@ -108,6 +108,29 @@ class PersistonStore {
   async deleteEntry (entryId) {
     return this.entries.removeOne({ id: entryId })
   }
+
+  async createField (payload) {
+    const fieldItem = {
+      id: uuid.v1(),
+      createdAt: Date.now(),
+      modifiedAt: Date.now(),
+      entryId: payload.entryId,
+      title: payload.title,
+      icon: payload.icon,
+      value: payload.value
+    }
+    return this.fields.insert(fieldItem)
+  }
+
+  async findField (payload) {
+    const Field = await this.fields.findOne(payload)
+    return Field
+  }
+
+  async findAllFields (payload) {
+    const fields = await this.fields.find(payload)
+    return fields
+  }
 }
 
 export default new PersistonStore()

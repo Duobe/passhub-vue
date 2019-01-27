@@ -13,7 +13,10 @@ export default new Vuex.Store({
   state: {
     isLogged: true,
     entryKeyword: '',
-    isInserted: false
+    isInserted: false,
+    groups: [],
+    entries: [],
+    fields: []
   },
   actions,
   mutations,

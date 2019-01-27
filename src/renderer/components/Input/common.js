@@ -5,6 +5,7 @@ export default {
       type: Number,
       default: 1E2
     },
+    focus: Boolean,
     disabled: Boolean,
     required: Boolean,
     maxlength: [Number, String],

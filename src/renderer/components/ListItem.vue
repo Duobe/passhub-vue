@@ -1,33 +1,40 @@
 <template>
-  <div class="list-item">
-    <ph-icon :name="icon" size="28"></ph-icon>
+  <div :class="['entry-item', { active }]" @click="click">
+    <ph-icon :name="data.icon" size="28"></ph-icon>
     <div class="detail">
-      <div class="title">{{title}}</div>
-      <div class="description">{{description}}</div>
+      <div class="title">{{data.title}}</div>
+      <div class="description">{{data.description}}</div>
     </div>
   </div>
 </template>
 <script>
 export default {
-  name: "ph-list-item",
+  name: "ph-entry-item",
   props: {
-    title: String,
-    description: String,
-    icon: String
+    data: Object,
+    active: Boolean
+  },
+  methods: {
+    click($event) {
+      this.$emit('click', data)
+    }
   }
 }
 </script>
 <style lang="less">
 @import url('../styles/theme.less');
 
-.list-item {
+.entry-item {
   position: relative;
   padding: 12px;
   min-height: 60px;
   display: flex;
   align-items: center;
 
-  &:hover {
+  &:hover:not([disabled]){
+    background-color: @grey3;
+  }
+  &.active:not([disabled]){
     background-color: @grey3;
   }
   .icon {

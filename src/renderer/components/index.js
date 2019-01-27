@@ -6,6 +6,7 @@ import Menu from './Menu'
 import MenuItem from './Menu/MenuItem'
 import Logo from './Logo'
 import Dialog from './Dialog'
+import FieldItem from './FieldItem'
 
 const myComponents = {
   Input,
@@ -15,7 +16,8 @@ const myComponents = {
   Menu,
   MenuItem,
   Logo,
-  Dialog
+  Dialog,
+  FieldItem
 }
 
 myComponents.install = (Vue) => {

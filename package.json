@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "axios": "^0.18.0",
+    "copy-text-to-clipboard": "^1.0.4",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "persiston": "0.1.0-alpha.1",
@@ -22,6 +23,7 @@
     "babel-core": "^6.26.3",
     "electron": "4.0.1",
     "electron-webpack": "^2.6.1",
+    "prettier": "^1.16.1",
     "source-map-support": "^0.5.9",
     "vue-loader": "^15.5.0",
     "vue-template-compiler": "^2.5.21",

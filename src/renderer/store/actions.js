@@ -37,5 +37,11 @@ export default {
     if (!payload.groupId) return
 
     return PersistonStore.findAllEntriesByGid(payload.groupId)
+  },
+  createField (context, payload) {
+    return PersistonStore.createField(payload)
+  },
+  getFieldsByEid (context, entryId) {
+    return PersistonStore.findAllFields({ entryId })
   }
 }

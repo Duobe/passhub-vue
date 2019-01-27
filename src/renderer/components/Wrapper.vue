@@ -12,10 +12,10 @@
     <ph-menu>
       <div class="options" slot="options" v-if="editable" :style="[optionStyle]">
         <div @click="editName">
-           <ph-icon name="edit"></ph-icon>Rename
+          <ph-icon name="edit"></ph-icon>Rename
         </div>
         <div @click="delGroup">
-           <ph-icon name="trash-2"></ph-icon>Delete
+          <ph-icon name="trash-2"></ph-icon>Delete
         </div>
       </div>
       <ph-menu-item
@@ -31,23 +31,23 @@
           <ph-icon :name="icon"></ph-icon>
           <ph-input
             @keyup.native="editGroup($event)"
+            @click.native.stop
+            @blur="blur"
             :value="item.title"
+            v-focus
             class="solid"
           ></ph-input>
         </ph-input-container>
         <template v-else>
-          <ph-icon :name="item.icon"></ph-icon>{{item.title}}
+          <ph-icon :name="item.icon"></ph-icon>
+          {{item.title}}
         </template>
       </ph-menu-item>
 
       <ph-menu-item class="create-input" v-if="visible" disabled>
         <ph-input-container>
           <ph-icon :name="icon"></ph-icon>
-          <ph-input
-            @keyup.native="createGroup($event)"
-            v-model="title"
-            class="solid"
-          ></ph-input>
+          <ph-input @keyup.native="createGroup($event)" v-model="title" v-focus class="solid"></ph-input>
         </ph-input-container>
       </ph-menu-item>
 
@@ -59,8 +59,8 @@
   </div>
 </template>
 <script>
-import phSearch from './Search.vue'
-import PersistonStore from '../lib/persistonStore'
+import phSearch from "./Search.vue";
+import PersistonStore from "../lib/persistonStore";
 
 export default {
   name: "wrapper",
@@ -71,114 +71,150 @@ export default {
       visible: false,
       editable: false,
       canRename: false,
-      icon: 'inbox',
-      title: '',
+      icon: "inbox",
+      title: "",
 
       groups: [],
       optionStyle: {},
       editGroupItem: {}
+    };
+  },
+  directives: {
+    focus: {
+      inserted: function(el) {
+        el.focus();
+      }
     }
   },
   computed: {
     groupId: function() {
-      const list = this.groups[this.activeIndex]
-      const id = list && list.id
-      return id || this.$route.params.groupId
+      const list = this.groups[this.activeIndex];
+      const id = list && list.id;
+      return id || this.$route.params.groupId;
     }
   },
   methods: {
+    blur() {
+      this.canRename = false;
+      this.editable = false;
+    },
+    editGroup(event) {
+      if (event.key === "Enter") {
+        const Gid = event.target.parentNode.parentNode.id;
+        const val = event.target.value;
+        this.$store
+          .dispatch("editGroup", {
+            id: Gid,
+            title: val
+          })
+          .then(() => {
+            this.canRename = false;
+            this.editable = false;
+            this.getGroupList(Gid);
+          });
+      }
+    },
     editName() {
-      this.canRename = true
+      this.canRename = true;
     },
     delGroup() {
-      const groupId = this.editGroupItem.id
+      const groupId = this.editGroupItem.id;
 
-      this.$store.dispatch('delGroup', groupId).then(result => {
+      this.$store.dispatch("delGroup", groupId).then(result => {
         if (result) {
-          this.fetchGroups()
+          this.fetchGroups();
         }
-        this.editable = false
-      })
+        this.editable = false;
+      });
     },
     editableGroup(event, index) {
-      if (!this.editable) this.editable = true
-      if (this.canRename) this.canRename = false
+      if (!this.editable) this.editable = true;
+      if (this.canRename) this.canRename = false;
 
       this.optionStyle = {
-        top: (29 + 42 * index) + 'px'
-      }
-      this.editGroupItem = this.groups[index]
+        top: 29 + 42 * index + "px"
+      };
+      this.editGroupItem = this.groups[index];
     },
     switchGroup(event, index) {
+      if (event.type === "contextmenu") return;
 
-      if (event.type === 'contextmenu') return
+      if (this.editable) this.editable = false;
 
-      if (this.editable) this.editable = false
+      if (this.activeIndex === index) return;
 
-      if (this.activeIndex === index) return
-
-      this.activeIndex = index
+      this.activeIndex = index;
 
       if (this.groupId) {
-        this.$router.push({ name: 'entry', params: { groupId: this.groupId } })
+        this.$router.push({ name: "entry", params: { groupId: this.groupId } });
       }
     },
     handleVisible() {
-      this.visible = true
+      this.visible = true;
+    },
+    getGroupList(groupId) {
+      this.$store.dispatch("getGroups").then(result => {
+        this.groups = result;
+        this.activeIndex = result.findIndex(value => value.id === groupId);
+
+        if (!!groupId) {
+          this.$router.push({ name: "entry", params: { groupId } });
+        }
+      });
     },
     createGroup(event) {
-      if (event.key === 'Enter') {
-        this.$store.dispatch('createGroup', { title: this.title, icon: this.icon }).then(result => {
-          this.visible = false
-          this.title = ''
+      if (event.key === "Enter") {
+        this.$store
+          .dispatch("createGroup", { title: this.title, icon: this.icon })
+          .then(result => {
+            this.visible = false;
+            this.title = "";
 
-          return result.id
-        }).then(groupId => {
-          this.$store.dispatch('getGroups').then(result => {
-            this.groups = result
-            this.activeIndex = result.findIndex(value => value.id === groupId)
-
-            if (!!groupId) {
-              this.$router.push({ name: 'entry', params: { groupId } })
-            }
+            return result.id;
           })
-        })
+          .then(groupId => {
+            this.getGroupList(groupId);
+          });
       }
     },
     handleBlankArea(event) {
-      if (event.target.closest(".create-input") || event.target.closest(".add")) return
-      if (this.visible) this.visible = false
-      if (this.editable) this.editable = false
+      if (event.target.closest(".create-input") || event.target.closest(".add"))
+        return;
+      if (this.visible) this.visible = false;
+      if (this.editable) this.editable = false;
     },
     closeOption() {
-      this.editable = false
-      this.editGroupItem = []
+      this.editable = false;
+      this.editGroupItem = [];
     },
     fetchGroups() {
-      this.$store.dispatch('getGroups').then((result) => {
-        this.groups = result
+      this.$store.dispatch("getGroups").then(result => {
+        this.groups = result;
         if (!!this.groupId) {
-          this.$router.push({ name: 'entry', params: { groupId: this.groupId } })
+          this.$router.push({
+            name: "entry",
+            params: { groupId: this.groupId }
+          });
         }
-      })
+      });
     }
   },
   created() {
     PersistonStore.initialize().then(() => {
-      this.fetchGroups()
-    })
+      this.fetchGroups();
+    });
 
-    document.addEventListener("click", this.handleBlankArea)
-    document.addEventListener("contextmenu", this.closeOption)
+    document.addEventListener("click", this.handleBlankArea);
+    document.addEventListener("contextmenu", this.closeOption);
   },
   beforeDestroy() {
-    document.removeEventListener("click", this.handleBlankArea)
-    document.removeEventListener("contextmenu", this.closeOption)
+    document.removeEventListener("click", this.handleBlankArea);
+    document.removeEventListener("contextmenu", this.closeOption);
   }
-}
+};
 </script>
 <style lang="less">
-@import url('../styles/theme.less');
+@import url("../styles/theme.less");
 
 .wrapper {
   height: 100%;
@@ -204,8 +240,8 @@ export default {
         }
       }
       .title {
-        font-size:22px;
-        font-weight:400;
+        font-size: 22px;
+        font-weight: 400;
         line-height: 1.5;
         margin-left: 8px;
         color: @textColor;
@@ -221,7 +257,7 @@ export default {
   }
   .create-input {
     padding: 8px;
-    transition: all .3s;
+    transition: all 0.3s;
     input {
       padding: 0;
     }
