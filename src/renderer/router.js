@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import Login from './views/Login'
+import LoginView from './views/LoginView'
 import GroupView from './views/GroupView'
 import FieldView from './views/FieldView'
 import MainView from './views/MainView'
@@ -34,7 +34,7 @@ export default new Router({
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: LoginView
     },
     {
       path: '*',

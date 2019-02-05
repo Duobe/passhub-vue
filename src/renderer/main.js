@@ -4,26 +4,26 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import myComponents from './components'
+import components from './components'
 import { VueFeatherIconsSsr as FeatherIcon } from 'vue-feather-icons-ssr'
 
 import './styles'
 
 Vue.config.productionTip = false
-
 Vue.component('feather-icon', FeatherIcon)
-Vue.use(myComponents)
+Vue.use(components)
 
+Vue.directive('focus', {
+  inserted: function (el) {
+    el.focus()
+  }
+})
 router.beforeEach((to, from, next) => {
-  const isLogged = store.getters.isLogged
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (isLogged) {
+    if (store.state.isLogged) {
       next()
     } else {
-      next({
-        path: '/login',
-        query: { redirect: to.fullPath }
-      })
+      next({ path: '/login', query: { redirect: to.fullPath } })
     }
   } else {
     next()
