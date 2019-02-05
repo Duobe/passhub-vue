@@ -1,4 +1,5 @@
 export default {
-  isLogged: state => state.isLogged,
-  entryKeyword: state => state.doFilter
+  filterEntries: state => {
+    return state.entries.filter(entry => entry.title.indexOf(state.entryKeyword) >= 0)
+  }
 }

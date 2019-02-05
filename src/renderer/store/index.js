@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import Auth from './modules/Auth'
-
 import actions from './actions'
 import mutations from './mutations'
 import getters from './getters'
@@ -11,17 +9,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    isLogged: true,
-    entryKeyword: '',
-    isInserted: false,
     groups: [],
+    group: null,
     entries: [],
-    fields: []
+    entry: null,
+    fields: [],
+    entryKeyword: '',
+    isLogged: false
   },
   actions,
   mutations,
-  getters,
-  modules: {
-    auth: Auth
-  }
+  getters
 })
