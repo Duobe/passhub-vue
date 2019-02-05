@@ -1,33 +1,29 @@
-import Input from './Input'
+import { Input, InputContainer } from './Input'
+import { Menu, MenuItem } from './Menu'
 import Button from './Button'
 import Icon from './Icon'
-import Form from './Form'
-import Menu from './Menu'
-import MenuItem from './Menu/MenuItem'
 import Logo from './Logo'
-import Dialog from './Dialog'
+import GroupItem from './GroupItem'
+import EntryItem from './EntryItem'
 import FieldItem from './FieldItem'
+import GroupAddition from './GroupAddition'
+import FieldAddition from './FieldAddition'
 
-const myComponents = {
-  Input,
-  Button,
-  Icon,
-  Form,
-  Menu,
-  MenuItem,
-  Logo,
-  Dialog,
-  FieldItem
+const components = {}
+
+components.install = Vue => {
+  Vue.component('ph-input', Input)
+  Vue.component('ph-input-container', InputContainer)
+  Vue.component('ph-button', Button)
+  Vue.component('ph-icon', Icon)
+  Vue.component('ph-logo', Logo)
+  Vue.component('ph-menu', Menu)
+  Vue.component('ph-menu-item', MenuItem)
+  Vue.component('ph-group-item', GroupItem)
+  Vue.component('ph-entry-item', EntryItem)
+  Vue.component('ph-field-item', FieldItem)
+  Vue.component('ph-group-addition', GroupAddition)
+  Vue.component('ph-field-addition', FieldAddition)
 }
 
-myComponents.install = (Vue) => {
-  for (let component in myComponents) {
-    const componentInstaller = myComponents[component]
-
-    if (componentInstaller && component !== 'install') {
-      Vue.use(componentInstaller)
-    }
-  }
-}
-
-export default myComponents
+export default components

@@ -1,7 +1,7 @@
-import Menu from './Menu.vue'
-import MenuItem from './MenuItem.vue'
+import Menu from './Menu'
+import MenuItem from './MenuItem'
 
-export default function install (Vue) {
-  Vue.component('ph-menu', Menu)
-  Vue.component('ph-menu-item', MenuItem)
+export {
+  Menu,
+  MenuItem
 }

@@ -1,11 +1,10 @@
 <template>
-  <span class="icon" @click="$emit('click', $event)">
+  <span class="ph-icon" @click="$emit('click', $event)">
     <feather-icon :name="name" :size="size" :strokeWidth="strokeWidth"></feather-icon>
   </span>
 </template>
 <script>
 export default {
-  name: 'ph-icon',
   props: {
     name: {
       type: String
@@ -22,11 +21,12 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import url("../../styles/theme.less");
 
-.icon {
-  padding: 8px;
+.ph-icon {
+  width: 32px;
+  height: 32px;
   display: flex;
   justify-content: center;
   align-items: center;

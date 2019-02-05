@@ -1,5 +1,3 @@
-import Logo from './Logo.vue'
+import Logo from './Logo'
 
-export default function install (Vue) {
-  Vue.component('ph-logo', Logo)
-}
+export default Logo

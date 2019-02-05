@@ -1,49 +1,43 @@
 <template>
-  <li
-    class="menu-item"
-    @click="handleClick"
-    @contextmenu.prevent.stop="handlecontextmenu"
-    :index="index"
-    :class="classes"
-    :href="href"
-    :target="target"
-    :disabled="disabled">
-    <slot></slot>
-  </li>
+  <div class="ph-menu-item" @click="onClick">
+    <ph-icon :name="icon" class="icon"></ph-icon>
+    <span class="title">{{title}}</span>
+  </div>
 </template>
 <script>
 export default {
-  name: 'ph-menu-item',
   props: {
-    href: String,
-    target: String,
-    disabled: Boolean,
-    activeIndex: {
-      type: Number,
-      default: 0
+    icon: {
+      type: String,
+      default: 'Type'
     },
-    index: Number
-  },
-  computed: {
-    classes() {
-      return {
-        'active': this.index === this.activeIndex
-      }
-    }
+    title: String
   },
   methods: {
-    handleClick($event) {
-      if (!this.disabled) {
-        this.$emit('click', $event, this.index)
-      }
-    },
-    handlecontextmenu($event) {
-      if (!this.disabled) {
-        this.$emit('optionClicked', $event, this.index)
-      }
+    onClick($event) {
+      this.$emit('click', $event)
     }
-  },
-  mounted() {
   }
 }
 </script>
+<style lang="less" scoped>
+@import url('../../styles/theme.less');
+.ph-menu-item {
+  display: flex;
+  width: 100%;
+  height: 32px;
+  padding: 8px;
+  cursor: pointer;
+  &:hover {
+    background-color: @grey3;
+  }
+  .icon {
+    width: 16px;
+    height: 16px;
+  }
+  .title {
+    margin-left: 8px;
+    color: @textColor;
+  }
+}
+</style>

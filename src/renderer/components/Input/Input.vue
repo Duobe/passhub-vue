@@ -1,6 +1,6 @@
 <template>
   <input
-    class="input"
+    class="ph-input"
     :type="type"
     :name="name"
     :value="value"
@@ -34,7 +34,6 @@ let getClosestVueParent = ($parent, cssClass) => {
 }
 
 export default {
-  name: "ph-input",
   props: {
     type: {
       type: String,
@@ -47,7 +46,7 @@ export default {
     this.$nextTick(() => {
       this.parentContainer = getClosestVueParent(
         this.$parent,
-        "input-container"
+        "ph-input-container"
       )
 
       if (!this.parentContainer) {
@@ -66,4 +65,4 @@ export default {
   }
 }
 </script>
-<style lang="less" src="./input.less"></style>
+<style lang="less" src="./input.less" scoped></style>

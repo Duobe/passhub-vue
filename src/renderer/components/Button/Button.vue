@@ -23,7 +23,6 @@
 </template>
 <script>
 export default {
-  name: "ph-button",
   props: {
     href: String,
     target: String,

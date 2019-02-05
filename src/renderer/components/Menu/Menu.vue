@@ -1,15 +1,17 @@
 <template>
-  <nav class="menu">
-    <ul>
-      <slot></slot>
-    </ul>
-    <slot name="options"></slot>
-  </nav>
+  <div class="ph-menu">
+    <slot></slot>
+  </div>
 </template>
-<script>
-export default {
-  name: "ph-menu",
+<style lang="less" scoped>
+@import url('../../styles/theme.less');
+.ph-menu {
+  width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  border: @border;
+  border-radius: @borderRadius;
 }
-</script>
-
-<style lang="less" src="./menu.less"></style>
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="input-container">
+  <div class="ph-input-container">
     <slot name="left" class="button-sm button-left"></slot>
 
     <slot></slot>
@@ -11,7 +11,6 @@
 </template>
 <script>
 export default {
-  name: "ph-input-container",
   props: {
     clear: Boolean
   },
@@ -28,7 +27,6 @@ export default {
   },
   methods: {
     clearValue() {
-      console.log('clear')
       this.inputInstance.$el.value = ''
       this.inputInstance.$emit('input', '')
       this.setValue('')
@@ -39,4 +37,4 @@ export default {
   }
 }
 </script>
-<style lang="less" src="./input.less"></style>
+<style lang="less" src="./input.less" scoped></style>

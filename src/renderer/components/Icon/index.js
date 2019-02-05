@@ -1,5 +1,3 @@
-import Icon from './Icon.vue'
+import Icon from './Icon'
 
-export default function install (Vue) {
-  Vue.component('ph-icon', Icon)
-}
+export default Icon
