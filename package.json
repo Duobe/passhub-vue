@@ -6,6 +6,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "copy-text-to-clipboard": "^1.0.4",
+    "crypto-random-string": "^1.0.0",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "persiston": "0.1.0-alpha.1",
