@@ -7,15 +7,15 @@
           <ph-input
             class="solid"
             autocomplete="new-keyword"
-            v-model.trim="entryKeyword"
-            @keyup="onEntrySearch"
+            :value="entryKeyword"
+            @keyup.native="onEntrySearch"
           ></ph-input>
         </ph-input-container>
         <ph-icon name="plus" class="icon-plus" @click="onEntryCreate"/>
       </div>
       <div class="ph-entry-list">
         <ph-entry-item
-          v-for="(item, index) in entries"
+          v-for="(item, index) in entryList"
           :item="item"
           :key="index"
           :class="{active: item.id === (entry && entry.id)}"
@@ -33,16 +33,14 @@
 import { mapGetters, mapState } from 'vuex'
 import * as randomString from 'crypto-random-string'
 export default {
-  computed: mapState({
-    group: state => state.group,
-    entryKeyword: state => state.entryKeyword,
-    entries: state => {
-      if (state.entryKeyword !== '') return this.filterEntries
-      return state.entries
-    },
-    entry: state => state.entry,
-    ...mapGetters(['filterEntries'])
-  }),
+  computed: {
+    ...mapState(['group', 'entry', 'entries', 'entryKeyword']),
+    ...mapGetters(['filterEntries']),
+    entryList() {
+      if (this.entryKeyword !== '') return this.filterEntries
+      return this.entries
+    }
+  },
   methods: {
     onEntryCreate() {
       this.$store.dispatch('createEntry', {
@@ -52,11 +50,13 @@ export default {
         description: 'description' + randomString(3)
       })
     },
-    onEntrySearch() {
-      this.$store.commit('SET_ENTRY_KEYWORD', this.keyword)
+    onEntrySearch(event) {
+      const keyword = event.target.value
+      this.$store.commit('SET_ENTRY_KEYWORD', keyword)
     },
     onEntrySelect(item, event) {
       if (event.type === 'contextmenu') return
+      if ((item && item.id) === (this.entry && this.entry.id)) return
       if (this.keyword) this.keyword = ''
 
       this.$store.commit('SELECT_ENTRY', item)
@@ -75,6 +75,10 @@ export default {
 .group-view {
   display: flex;
   height: 100%;
+  .ph-entry-list {
+    overflow: auto;
+    flex: 1;
+  }
   .entry-list {
     height: 100%;
     width: 250px;
@@ -82,12 +86,17 @@ export default {
     display: flex;
     flex-direction: column;
     .entry-search {
+      height: 56px;
       display: flex;
-      margin: 12px 14px;
-      .icon-plus {
-        margin-left: 10px;
+      align-items: center;
+      justify-content: center;
+      .ph-input-container {
+        height: 32px;
       }
-      .input {
+      .icon-plus {
+        background-color: @grey3;
+      }
+      .ph-input {
         padding: 0 8px 0 0;
         &-container {
           border: none;

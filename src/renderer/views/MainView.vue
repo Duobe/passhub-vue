@@ -11,12 +11,19 @@
           :item="item"
           :key="index"
           :class="{active: item.id === (group && group.id)}"
+          :editable="(item.id === (group && group.id)) && editable"
           @click="onGroupSelect"
           @contextmenu="onContextMenu"
+          @keyup="onUpdateGroup"
+          @blur="onBlur"
         ></ph-group-item>
         <ph-group-addition></ph-group-addition>
       </div>
     </div>
+    <ph-menu class="ph-main-menu" v-if="visible" :style="{ top: top + 'px'}">
+      <ph-menu-item icon="trash-2" title="Delete" @click="onSetting('del')"></ph-menu-item>
+      <ph-menu-item icon="edit" title="Edit" @click="onSetting('edit')"></ph-menu-item>
+    </ph-menu>
     <div class="container">
       <router-view :key="$route.fullPath"></router-view>
     </div>
@@ -26,18 +33,54 @@
 import { mapState } from 'vuex'
 export default {
   name: 'main-view',
-  computed: mapState({
-    groups: state => state.groups,
-    group: state => state.group
-  }),
+  data() {
+    return {
+      visible: false,
+      editable: false,
+      top: 0
+    }
+  },
+  computed: {
+    ...mapState(['groups', 'group'])
+  },
   methods: {
+    onBlur() {
+      this.visible = false
+      this.editable = false
+    },
+    onSetting(type) {
+      if (type === 'edit') {
+        this.editable = true
+        this.visible = false
+      } else {
+        this.$store.dispatch('deleteGroup', this.group.id)
+        this.visible = false
+        this.editable = false
+      }
+    },
+    onUpdateGroup(group, event) {
+      const title = event.target.value
+      if (!title || title === group.title) return
+      this.$store.dispatch('updateGroup', {
+        groupId: this.group.id,
+        title
+      })
+      this.visible = false
+      this.editable = false
+    },
     onGroupSelect(group, event) {
-      if (event.type === "contextmenu") return
+      if (event.type === 'contextmenu') return
+      if (this.visible) this.visible = false
+      if (this.editable) this.editable = false
 
       this.$store.commit('SELECT_GROUP', group)
       this.$router.push({ name: 'entry', params: { groupId: group.id } })
     },
-    onContextMenu(group) {}
+    onContextMenu(group, event) {
+      this.visible = true
+      this.top = event.clientY
+      this.$store.commit('SELECT_GROUP', group)
+    }
   },
   mounted() {
     this.$store.dispatch('fetchAllGroup')
@@ -71,12 +114,21 @@ export default {
         font-size: 22px;
         font-weight: 400;
         color: @textColor;
+        user-select: none;
       }
     }
     .group-list {
+      overflow: auto;
       flex: 1;
       background-color: @grey3;
     }
+  }
+  .ph-main-menu {
+    position: fixed;
+    left: 75px;
+    top: 0;
+    background-color: @white;
+    transition: all 0.3s;
   }
   .container {
     flex: 1;
