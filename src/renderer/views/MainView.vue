@@ -1,5 +1,9 @@
 <template>
   <div class="main-view">
+    <div class="menu-bar">
+      <ph-icon name="minus" class="mini" @click="sendMinimize"></ph-icon>
+      <ph-icon name="x" class="close" @click="sendClose"></ph-icon>
+    </div>
     <div class="sidebar">
       <div class="header">
         <ph-logo class="logo"></ph-logo>
@@ -31,6 +35,8 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+const { ipcRenderer } = require('electron')
+
 export default {
   name: 'main-view',
   data() {
@@ -44,6 +50,18 @@ export default {
     ...mapState(['groups', 'group'])
   },
   methods: {
+    sendClose() {
+      // closr
+      ipcRenderer.send('master-close', 'render-index')
+    },
+    sendMinimize() {
+      // minimize
+      ipcRenderer.send('master-minimize', 'render-index')
+    },
+    sendmMximize() {
+      // maximize
+      ipcRenderer.send('master-maximize', 'render-index')
+    },
     onBlur() {
       this.visible = false
       this.editable = false
@@ -69,7 +87,11 @@ export default {
       this.editable = false
     },
     onGroupSelect(group, event) {
-      if (event.type === 'contextmenu') return
+      if (
+        event.type === 'contextmenu' ||
+        group.id === this.$route.params.groupId
+      )
+        return
       if (this.visible) this.visible = false
       if (this.editable) this.editable = false
 
@@ -92,12 +114,26 @@ export default {
 .main-view {
   display: flex;
   height: 100%;
+  .menu-bar {
+    background-color: @white;
+    display: flex;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 26px;
+    z-index: 9999;
+    & > span {
+      height: auto;
+      width: 42px;
+    }
+  }
   .sidebar {
     width: 200px;
     border-right: @border;
     display: flex;
     flex-direction: column;
     .header {
+      -webkit-app-region: drag;
       width: 199px;
       height: 56px;
       padding: 12px 14px;

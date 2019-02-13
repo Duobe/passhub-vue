@@ -48,7 +48,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
+  -webkit-app-region: drag;
   & > div {
     width: 320px;
   }
@@ -59,9 +59,11 @@ export default {
   }
   .icon {
     cursor: pointer;
+    -webkit-app-region: no-drag;
   }
   input {
     height: 36px;
+    -webkit-app-region: no-drag;
   }
 }
 </style>

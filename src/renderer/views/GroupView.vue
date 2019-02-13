@@ -33,6 +33,11 @@
 import { mapGetters, mapState } from 'vuex'
 import * as randomString from 'crypto-random-string'
 export default {
+  data() {
+    return {
+      top: 0
+    }
+  },
   computed: {
     ...mapState(['group', 'entry', 'entries', 'entryKeyword']),
     ...mapGetters(['filterEntries']),
@@ -48,6 +53,10 @@ export default {
         icon: 'list',
         groupId: this.group.id,
         description: 'description' + randomString(3)
+      })
+      this.$router.push({
+        name: 'field',
+        params: { entryId: this.entry && this.entry.id }
       })
     },
     onEntrySearch(event) {

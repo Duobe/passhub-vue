@@ -52,8 +52,10 @@ export default {
 .field-view {
   height: 100%;
   padding: 12px 0;
+  overflow: auto;
   .ph-field-list {
     padding: 10px 14px 55px;
+    overflow: auto;
   }
   & > .ph-input-container {
     border: none;

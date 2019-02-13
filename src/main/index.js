@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const url = require('url')
 
@@ -23,9 +23,9 @@ function createWindow () {
     width: 800,
     height: 480,
     minWidth: 600,
-    minHeight: 400
-    // frame: false,
-    // autoHideMenuBar: true
+    minHeight: 400,
+    frame: false,
+    autoHideMenuBar: true
   })
 
   win.loadURL(loadUrl)
@@ -49,4 +49,12 @@ app.on('activate', () => {
   if (win === null) {
     createWindow()
   }
+})
+
+ipcMain.on('master-close', () => {
+  app.quit()
+})
+
+ipcMain.on('master-minimize', () => {
+  win.minimize()
 })

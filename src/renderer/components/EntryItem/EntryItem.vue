@@ -28,6 +28,7 @@ export default {
   min-height: 60px;
   display: flex;
   align-items: center;
+  cursor: pointer;
   &:hover {
     background-color: @grey3;
   }
@@ -45,6 +46,7 @@ export default {
     margin-left: 12px;
     color: @textColor;
     .title {
+      user-select: none;
       font-weight: bold;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -52,6 +54,7 @@ export default {
       max-width: 180px;
     }
     .description {
+      user-select: none;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
