@@ -25,7 +25,10 @@ function createWindow () {
     minWidth: 600,
     minHeight: 400,
     frame: false,
-    autoHideMenuBar: true
+    autoHideMenuBar: true,
+    webPreferences: {
+      nodeIntegration: true
+    }
   })
 
   win.loadURL(loadUrl)
